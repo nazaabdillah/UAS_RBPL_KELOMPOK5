@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>Simulasi Login Admin (Testing JWT)</h2>
+    <p>Klik tombol di bawah untuk menembak endpoint /api/v1/auth/login</p>
+    
+    <button id="btnLogin" style="padding: 10px 20px; cursor: pointer;">Dapatkan Token JWT</button>
+    
+    <pre id="result" style="background: #1e1e1e; color: #00ff00; padding: 15px; margin-top: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word;"></pre>
+
+    <script>
+        document.getElementById('btnLogin').addEventListener('click', async () => {
+            const resultBox = document.getElementById('result');
+            resultBox.innerText = "Menghubungi server...";
+            
+            try {
+                // Pastikan backend Golang di port 3000 sedang menyala
+                const response = await fetch('http://127.0.0.1:3000/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: "admin", password: "admin123" })
+                });
+                
+                const data = await response.json();
+                
+                // Tampilkan JSON mentah (termasuk Token JWT) ke layar browser
+                resultBox.innerText = JSON.stringify(data, null, 4);
+                
+            } catch (err) {
+                resultBox.innerText = "Error: Pastikan server Golang sudah di-run. Detail: " + err.message;
+            }
+        });
+    </script>
+</body>
+</html>
