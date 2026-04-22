@@ -151,6 +151,126 @@ class UserController {
     }
 
     // =========================================================
+    // Edit User — form + update ke MikroTik & DB
+    // =========================================================
+    public function editUser(): void {
+        requireLogin();
+
+        $username = sanitize($_GET['username'] ?? $_POST['username'] ?? '');
+        if ($username === '') {
+            setFlash('danger', 'Username tidak valid.');
+            redirect('index.php?page=users');
+        }
+
+        // Ambil profile list dari MikroTik untuk dropdown
+        $profiles = [];
+        $mtError  = null;
+        try {
+            $api     = getMikrotikConnection();
+            $rawProf = $api->getProfiles();
+
+            // Ambil data user saat ini langsung dari MikroTik
+            $rawUsers = $api->query('/ip/hotspot/user/print', ["?name=$username"]);
+            $api->disconnect();
+
+            foreach ($rawProf as $p) {
+                if (isset($p['name'])) $profiles[] = $p['name'];
+            }
+
+            // Cari data user yang akan diedit
+            $userData = null;
+            foreach ($rawUsers as $u) {
+                if (isset($u['name']) && $u['name'] === $username) {
+                    $userData = [
+                        'name'     => $u['name'],
+                        'password' => $u['password'] ?? '',
+                        'profile'  => $u['profile']  ?? '',
+                        'comment'  => $u['comment']  ?? '',
+                        'disabled' => ($u['disabled'] ?? 'false') === 'true',
+                    ];
+                    break;
+                }
+            }
+
+            if ($userData === null) {
+                setFlash('danger', "User '$username' tidak ditemukan di MikroTik.");
+                redirect('index.php?page=users');
+            }
+
+        } catch (\RuntimeException $e) {
+            $mtError  = $e->getMessage();
+            $userData = ['name' => $username, 'password' => '', 'profile' => '', 'comment' => '', 'disabled' => false];
+            $profiles = array_keys(defined('MT_PROFILES') ? MT_PROFILES : []);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $pageTitle        = 'Edit User';
+            $currentPage      = 'users';
+            $breadcrumbParent = 'Users';
+            $breadcrumb       = 'Edit User';
+            require __DIR__ . '/../views/users/edit.php';
+            return;
+        }
+
+        // ── Proses POST ──
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+            setFlash('danger', 'Invalid CSRF token.');
+            redirect('index.php?page=edit-user&username=' . urlencode($username));
+        }
+
+        $newPassword = $_POST['password'] ?? '';
+        $newProfile  = sanitize($_POST['profile']  ?? '');
+        $newComment  = sanitize($_POST['comment']   ?? '');
+        $disabled    = isset($_POST['disabled']) ? 'true' : 'false';
+
+        if ($newProfile === '') {
+            setFlash('danger', 'Profile wajib dipilih.');
+            redirect('index.php?page=edit-user&username=' . urlencode($username));
+        }
+
+        // Bangun hanya field yang berubah agar tidak override data kosong
+        $fields = ['profile' => $newProfile, 'comment' => $newComment, 'disabled' => $disabled];
+        if ($newPassword !== '') {
+            $fields['password'] = $newPassword;
+        }
+
+        try {
+            $api = getMikrotikConnection();
+            $ok  = $api->updateHotspotUser($username, $fields);
+            $api->disconnect();
+
+            if (!$ok) throw new \RuntimeException($api->getLastError());
+
+        } catch (\RuntimeException $e) {
+            setFlash('danger', 'Gagal update user di MikroTik: ' . $e->getMessage());
+            redirect('index.php?page=edit-user&username=' . urlencode($username));
+        }
+
+        // Sinkronisasi ke DB lokal jika ada
+        $voucherModel = new VoucherModel();
+        $vLocal = $voucherModel->findByUsername($username);
+        if ($vLocal) {
+            $updateData = ['profile' => $newProfile, 'comment' => $newComment];
+            if ($newPassword !== '') $updateData['password'] = $newPassword;
+            // Update via raw PDO karena VoucherModel belum punya updateUser
+            $db   = getDB();
+            $sets = [];
+            $bind = [':id' => $vLocal['id']];
+            if ($newPassword !== '') { $sets[] = 'password = :password'; $bind[':password'] = $newPassword; }
+            $sets[] = 'profile = :profile';  $bind[':profile']  = $newProfile;
+            $sets[] = 'comment = :comment';  $bind[':comment']  = $newComment;
+            if ($sets) {
+                $db->prepare('UPDATE vouchers SET ' . implode(', ', $sets) . ' WHERE id = :id')
+                   ->execute($bind);
+            }
+        }
+
+        logActivity('EDIT_USER', "Edit user '$username' profile=$newProfile");
+        setFlash('success', "User '$username' berhasil diperbarui.");
+        redirect('index.php?page=users');
+    }
+
+    // =========================================================
     // Delete User dari MikroTik (via POST)
     // =========================================================
     public function deleteUser(): void {

@@ -120,6 +120,99 @@ class ProfileController {
     }
 
     // =========================================================
+    // Edit Profile — form + update ke MikroTik
+    // =========================================================
+    public function editProfile(): void {
+        requireLogin();
+
+        $name = sanitize($_GET['name'] ?? $_POST['name_original'] ?? '');
+        if ($name === '') {
+            setFlash('danger', 'Nama profile tidak valid.');
+            redirect('index.php?page=profiles');
+        }
+
+        // Ambil data profile dari MikroTik
+        $profileData = null;
+        $mtError     = null;
+
+        try {
+            $api    = getMikrotikConnection();
+            $result = $api->query('/ip/hotspot/user/profile/print', ["?name=$name"]);
+            $api->disconnect();
+
+            foreach ($result as $row) {
+                if (!isset($row['name'])) continue;
+                $profileData = [
+                    'name'            => $row['name'],
+                    'session-timeout' => $row['session-timeout'] ?? '0s',
+                    'shared-users'    => $row['shared-users']    ?? '1',
+                    'rate-limit'      => $row['rate-limit']      ?? '',
+                    'idle-timeout'    => $row['idle-timeout']    ?? '',
+                    '.id'             => $row['.id']             ?? '',
+                ];
+                break;
+            }
+
+            if ($profileData === null) {
+                setFlash('danger', "Profile '$name' tidak ditemukan di MikroTik.");
+                redirect('index.php?page=profiles');
+            }
+
+        } catch (\RuntimeException $e) {
+            $mtError     = $e->getMessage();
+            $profileData = ['name' => $name, 'session-timeout' => '', 'shared-users' => '1', 'rate-limit' => '', 'idle-timeout' => ''];
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $pageTitle        = 'Edit Profile';
+            $currentPage      = 'profiles';
+            $breadcrumbParent = 'User Profile';
+            $breadcrumb       = 'Edit Profile';
+            require __DIR__ . '/../views/profiles/edit.php';
+            return;
+        }
+
+        // ── Proses POST ──
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+            setFlash('danger', 'Invalid CSRF token.');
+            redirect('index.php?page=edit-profile&name=' . urlencode($name));
+        }
+
+        $sessionTimeout = sanitize($_POST['session_timeout'] ?? '');
+        $sharedUsers    = sanitizeInt($_POST['shared_users']  ?? 1, 1);
+        $rateLimit      = sanitize($_POST['rate_limit']       ?? '');
+        $idleTimeout    = sanitize($_POST['idle_timeout']     ?? '');
+
+        if ($sessionTimeout === '') {
+            setFlash('danger', 'Session timeout wajib diisi.');
+            redirect('index.php?page=edit-profile&name=' . urlencode($name));
+        }
+
+        $fields = [
+            'session-timeout' => $sessionTimeout,
+            'shared-users'    => (string)$sharedUsers,
+            'rate-limit'      => $rateLimit,
+            'idle-timeout'    => $idleTimeout,
+        ];
+
+        try {
+            $api = getMikrotikConnection();
+            $ok  = $api->updateHotspotProfile($name, $fields);
+            $api->disconnect();
+
+            if (!$ok) throw new \RuntimeException($api->getLastError());
+
+        } catch (\RuntimeException $e) {
+            setFlash('danger', 'Gagal update profile di MikroTik: ' . $e->getMessage());
+            redirect('index.php?page=edit-profile&name=' . urlencode($name));
+        }
+
+        logActivity('EDIT_PROFILE', "Edit profile '$name' timeout=$sessionTimeout");
+        setFlash('success', "Profile '$name' berhasil diperbarui.");
+        redirect('index.php?page=profiles');
+    }
+
+    // =========================================================
     // Delete Profile dari MikroTik
     // =========================================================
     public function deleteProfile(): void {

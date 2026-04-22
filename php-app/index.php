@@ -44,9 +44,9 @@ $allowedPages = [
     // Voucher
     'vouchers', 'generate', 'delete', 'print', 'sync', 'quick-print',
     // Users
-    'users', 'add-user', 'delete-user',
+    'users', 'add-user', 'edit-user', 'delete-user',
     // Profiles
-    'profiles', 'add-profile', 'delete-profile',
+    'profiles', 'add-profile', 'edit-profile', 'delete-profile',
 ];
 
 if (!in_array($page, $allowedPages, true)) {
@@ -97,6 +97,9 @@ try {
         case 'add-user':
             (new UserController())->addUser();
             break;
+        case 'edit-user':
+            (new UserController())->editUser();
+            break;
         case 'delete-user':
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') redirect('index.php?page=users');
             (new UserController())->deleteUser();
@@ -108,6 +111,9 @@ try {
             break;
         case 'add-profile':
             (new ProfileController())->addProfile();
+            break;
+        case 'edit-profile':
+            (new ProfileController())->editProfile();
             break;
         case 'delete-profile':
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') redirect('index.php?page=profiles');
