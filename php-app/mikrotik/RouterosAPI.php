@@ -184,8 +184,80 @@ class RouterosAPI {
     }
 
     /**
-     * Cek apakah user sedang aktif (terkoneksi) di MikroTik
+     * Update data user hotspot di MikroTik
+     * Hanya field yang dikirim yang akan diupdate (password, profile, comment, disabled)
      */
+    public function updateHotspotUser(string $username, array $fields): bool {
+        // Cari .id user berdasarkan nama
+        $result = $this->query('/ip/hotspot/user/print', ["?name=$username"]);
+        $found  = array_filter($result ?? [], fn($r) => isset($r['.id']));
+
+        if (empty($found)) {
+            $this->lastError = "User '$username' tidak ditemukan di MikroTik.";
+            return false;
+        }
+
+        $user = reset($found);
+        $id   = $user['.id'];
+
+        // Bangun params — hanya field yang ada di $fields
+        $params = ["=.id=$id"];
+        if (isset($fields['password']))  $params[] = "=password={$fields['password']}";
+        if (isset($fields['profile']))   $params[] = "=profile={$fields['profile']}";
+        if (isset($fields['comment']))   $params[] = "=comment={$fields['comment']}";
+        if (isset($fields['disabled']))  $params[] = "=disabled={$fields['disabled']}";
+
+        $setResult = $this->query('/ip/hotspot/user/set', $params);
+
+        if ($setResult === false) return false;
+
+        foreach ($setResult as $row) {
+            if (isset($row['type']) && $row['type'] === '!trap') {
+                $this->lastError = $row['message'] ?? 'Update user failed';
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Update profile hotspot di MikroTik
+     */
+    public function updateHotspotProfile(string $profileName, array $fields): bool {
+        // Cari .id profile
+        $result = $this->query('/ip/hotspot/user/profile/print', ["?name=$profileName"]);
+        $found  = array_filter($result ?? [], fn($r) => isset($r['.id']));
+
+        if (empty($found)) {
+            $this->lastError = "Profile '$profileName' tidak ditemukan.";
+            return false;
+        }
+
+        $prof   = reset($found);
+        $id     = $prof['.id'];
+        $params = ["=.id=$id"];
+
+        if (isset($fields['session-timeout'])) $params[] = "=session-timeout={$fields['session-timeout']}";
+        if (isset($fields['shared-users']))    $params[] = "=shared-users={$fields['shared-users']}";
+        if (isset($fields['rate-limit']))      $params[] = "=rate-limit={$fields['rate-limit']}";
+        if (isset($fields['idle-timeout']))    $params[] = "=idle-timeout={$fields['idle-timeout']}";
+
+        $setResult = $this->query('/ip/hotspot/user/profile/set', $params);
+
+        if ($setResult === false) return false;
+
+        foreach ($setResult as $row) {
+            if (isset($row['type']) && $row['type'] === '!trap') {
+                $this->lastError = $row['message'] ?? 'Update profile failed';
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     public function isUserActive(string $username): bool {
         $result = $this->query('/ip/hotspot/active/print', ["?user=$username"]);
         if ($result === false) return false;

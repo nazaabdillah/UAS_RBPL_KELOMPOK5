@@ -104,6 +104,10 @@
                             </td>
                             <td class="text-muted small"><?= e($u['comment'] ?: '-') ?></td>
                             <td>
+                                <a href="index.php?page=edit-user&username=<?= urlencode($u['name']) ?>"
+                                   class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
                                 <form method="POST" action="index.php?page=delete-user"
                                       onsubmit="return confirm('Hapus user <?= e($u['name']) ?> dari MikroTik?')"
                                       class="d-inline">
