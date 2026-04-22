@@ -64,6 +64,10 @@
                             <td class="font-mono small"><?= e($p['idle-timeout'] === '' ? '-' : $p['idle-timeout']) ?></td>
                             <td>
                                 <?php if ($p['name'] !== 'default'): ?>
+                                <a href="index.php?page=edit-profile&name=<?= urlencode($p['name']) ?>"
+                                   class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
                                 <form method="POST" action="index.php?page=delete-profile"
                                       onsubmit="return confirm('Hapus profile <?= e($p['name']) ?>? User yang memakai profile ini akan terpengaruh.')"
                                       class="d-inline">
