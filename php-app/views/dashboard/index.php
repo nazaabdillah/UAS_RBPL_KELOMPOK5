@@ -2,6 +2,7 @@
 $pageTitle   = 'Dashboard';
 $currentPage = 'dashboard';
 $breadcrumb  = 'Dashboard';
+
 require __DIR__ . '/../layout/header.php';
 ?>
 
