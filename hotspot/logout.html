@@ -1,44 +1,90 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />   
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="-1">
-<title>Internet hotspot - Log out</title>
-<link rel="stylesheet" href="css/style.css">
-<script>
-    function openLogin() {
-	if (window.name != 'hotspot_logout') return true;
-	open('$(link-login)', '_blank', '');
-	window.close();
-	return false;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="-1">
+  <title>voucher.net — Logout</title>
+  <style>
+    *{margin:0;padding:0;border:0;box-sizing:border-box}
+    html,body{min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;background:#070b10;color:#eef2f7;overflow-x:hidden}
+    body{background-image:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(0,200,180,.14) 0%,transparent 65%),radial-gradient(ellipse 60% 45% at 95% 85%,rgba(100,80,220,.11) 0%,transparent 60%)}
+    table.center-wrap{width:100%;min-height:100vh;border-collapse:collapse}
+    table.center-wrap td{vertical-align:middle;padding:30px 16px}
+    .wrap{width:100%;max-width:400px;margin:0 auto}
+    .brand{text-align:center;margin-bottom:26px}
+    .brand-row{display:inline-block;vertical-align:middle;margin-bottom:8px}
+    .brand-icon{display:inline-block;vertical-align:middle;width:34px;height:34px;background:#0043d2;border-radius:9px;color:#060e14;font-size:17px;font-weight:800;line-height:34px;text-align:center;margin-right:9px}
+    .brand-name{display:inline-block;vertical-align:middle;font-size:24px;font-weight:800;color:#eef2f7;letter-spacing:-0.5px}
+    .brand-name span{color:#004dd2}
+    .brand-tag{display:block;font-size:11px;color:#556070;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+    .card{background:#111827;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 30px;position:relative;text-align:center;-webkit-box-shadow:0 20px 60px rgba(0,0,0,.6);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+    .card-top-line{height:1px;background:#004ad2;opacity:.4;margin:-34px -30px 26px;position:relative}
+    .check-icon{width:54px;height:54px;border-radius:50%;border:2px solid rgba(0, 81, 210, 0.4);background:rgba(0,210,190,.09);line-height:54px;font-size:24px;margin:0 auto 18px;color:#0043d2;display:block}
+    .page-title{font-size:18px;font-weight:700;color:#eef2f7;margin-bottom:5px}
+    .page-sub{font-size:13px;color:#6b7a96;margin-bottom:22px;line-height:1.5}
+    .stat-tbl{width:100%;border-collapse:collapse;margin-bottom:20px;text-align:left}
+    .stat-tbl tr{border-bottom:1px solid rgba(255,255,255,.07)}
+    .stat-tbl tr:last-child{border-bottom:none}
+    .stat-tbl td{padding:11px 0;font-size:13px;vertical-align:middle}
+    .stat-tbl td:first-child{color:#6b7a96;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;width:48%}
+    .stat-tbl td:last-child{color:#eef2f7;font-weight:500;text-align:right}
+    input[type=submit]{display:block;width:100%;height:48px;background:#0045c4;color:#060e14;font-family:inherit;font-size:15px;font-weight:700;border:none;border-radius:8px;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-transition:opacity .2s;transition:opacity .2s}
+    input[type=submit]:hover{opacity:.88}
+    .footer{text-align:center;margin-top:20px;font-size:11px;color:#3a4558}
+    .footer a{color:#556070;text-decoration:none}
+    @media(max-width:480px){.card{padding:26px 20px;border-radius:12px}}
+  </style>
+  <script>
+    function openLogin(){
+      if(window.name!='hotspot_logout')return true;
+      open('$(link-login)','_blank','');
+      window.close();
+      return false;
     }
-</script>
+  </script>
 </head>
-
 <body>
-    <div class="ie-fixMinHeight">
-        <div class="main">
-            <div class="wrap">
-                <h1>You have just logged out!</h1> 
-                <table>  
-                    <tr><td>Username</td><td>$(username)</td></tr>
-                    <tr><td>IP address</td><td>$(ip)</td></tr>
-                    <tr><td>MAC address</td><td>$(mac)</td></tr>
-                    <tr><td>Session time</td><td>$(uptime)</td></tr>
-                    $(if session-time-left)
-                    <tr><td>Time left</td><td>$(session-time-left)</td></tr>
-                    $(endif)
-                    <tr><td>Bytes up / down:</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
-                </table>
 
+  <table class="center-wrap"><tr><td>
+  <div class="wrap">
 
-                <form action="$(link-login)" name="login" onSubmit="return openLogin()">
-                <input type="submit" value="Log in">
-                </form>
-            </div>
-        </div>
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-icon">V</div>
+        <div class="brand-name">voucher<span>.</span>net</div>
+      </div>
+      <span class="brand-tag">Wireless Internet Access</span>
     </div>
+
+    <div class="card">
+      <div class="card-top-line"></div>
+
+      <div class="check-icon">&#10003;</div>
+      <div class="page-title">Sesi Berakhir</div>
+      <p class="page-sub">Terima kasih sudah menggunakan layanan kami.</p>
+
+      <table class="stat-tbl">
+        <tr><td>Username</td><td>$(username)</td></tr>
+        <tr><td>IP Address</td><td>$(ip)</td></tr>
+        <tr><td>MAC Address</td><td>$(mac)</td></tr>
+        <tr><td>Durasi Sesi</td><td>$(uptime)</td></tr>
+        $(if session-time-left)
+        <tr><td>Sisa Waktu</td><td>$(session-time-left)</td></tr>
+        $(endif)
+        <tr><td>Upload / Download</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+      </table>
+
+      <form action="$(link-login)" name="login" onSubmit="return openLogin()">
+        <input type="submit" value="Masuk Kembali" />
+      </form>
+    </div>
+
+    <p class="footer">Powered by <a href="#">MikroTik RouterOS</a> &nbsp;&middot;&nbsp; &copy; voucher.net</p>
+
+  </div>
+  </td></tr></table>
 
 </body>
 </html>
