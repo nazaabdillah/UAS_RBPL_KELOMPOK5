@@ -91,125 +91,36 @@ document.addEventListener('DOMContentLoaded', function () {
             if (bsAlert) bsAlert.close();
         }, 5000);
     });
-
     // =========================================================
-    // Animasi Progress Bar (Dashboard)
+    // Dark / Light Mode Toggle
     // =========================================================
-    const progressBars = document.querySelectorAll('.progress-bar');
-    if (progressBars.length > 0) {
-        // Reset width ke 0 dulu, lalu animasikan
-        progressBars.forEach(function (bar) {
-            const targetWidth = bar.style.width;
-            bar.style.width   = '0%';
-            setTimeout(function () {
-                bar.style.transition = 'width 1s ease';
-                bar.style.width      = targetWidth;
-            }, 200);
-        });
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle?.querySelector('i');
+    const themeText = themeToggle?.querySelector('span');
+    
+    // Cek tema yang tersimpan di localStorage
+    const savedTheme = localStorage.getItem('vouchernet_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeIcon) themeIcon.className = 'bi bi-sun';
+        if (themeText) themeText.textContent = 'Mode Terang';
     }
-
-    // =========================================================
-    // Konfirmasi Hapus dengan tombol lebih baik
-    // =========================================================
-    // Sudah pakai inline onclick confirm(), tidak perlu override
-
-    // =========================================================
-    // Highlight baris tabel yang baru saja diaksi
-    // =========================================================
-    const urlParams = new URLSearchParams(window.location.search);
-    const highlight = urlParams.get('highlight');
-    if (highlight) {
-        const rows = document.querySelectorAll('tr[data-id="' + highlight + '"]');
-        rows.forEach(function (row) {
-            row.style.background = 'rgba(59,130,246,0.08)';
-            setTimeout(function () {
-                row.style.transition = 'background 1s ease';
-                row.style.background = '';
-            }, 2000);
-        });
-    }
-
-    // =========================================================
-    // Stat Card: Animasi angka counter
-    // =========================================================
-    function animateCounter(el) {
-        const target = parseInt(el.textContent.replace(/\D/g, ''), 10);
-        if (isNaN(target) || target === 0) return;
-
-        let current  = 0;
-        const step   = Math.max(1, Math.ceil(target / 40));
-        const timer  = setInterval(function () {
-            current += step;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            if (document.body.classList.contains('dark-mode')) {
+                // Switch ke Light Mode
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('vouchernet_theme', 'light');
+                if (themeIcon) themeIcon.className = 'bi bi-moon-stars';
+                if (themeText) themeText.textContent = 'Mode Gelap';
+            } else {
+                // Switch ke Dark Mode
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('vouchernet_theme', 'dark');
+                if (themeIcon) themeIcon.className = 'bi bi-sun';
+                if (themeText) themeText.textContent = 'Mode Terang';
             }
-            el.textContent = current.toLocaleString('id-ID');
-        }, 20);
-    }
-
-    document.querySelectorAll('.stat-value').forEach(function (el) {
-        // Hanya angka murni (bukan teks seperti "Online")
-        if (/^\d[\d.,]*$/.test(el.textContent.trim())) {
-            animateCounter(el);
-        }
-    });
-
-    // =========================================================
-    // Select All / Deselect All Checkbox
-    // =========================================================
-    const checkAll = document.getElementById('checkAll');
-    if (checkAll) {
-        // Sinkronisasi state checkAll jika semua row dicentang manual
-        document.querySelectorAll('.row-check').forEach(function (cb) {
-            cb.addEventListener('change', function () {
-                const all     = document.querySelectorAll('.row-check');
-                const checked = document.querySelectorAll('.row-check:checked');
-                checkAll.indeterminate = checked.length > 0 && checked.length < all.length;
-                checkAll.checked       = checked.length === all.length;
-            });
         });
     }
-
-    // =========================================================
-    // Form Validation Feedback
-    // =========================================================
-    const forms = document.querySelectorAll('form[data-validate]');
-    forms.forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        });
-    });
-
-    // =========================================================
-    // Copy to Clipboard (username/password)
-    // =========================================================
-    document.querySelectorAll('[data-copy]').forEach(function (el) {
-        el.style.cursor = 'pointer';
-        el.title        = 'Klik untuk menyalin';
-        el.addEventListener('click', function () {
-            navigator.clipboard.writeText(el.dataset.copy).then(function () {
-                const orig      = el.textContent;
-                el.textContent  = '✓ Disalin!';
-                el.style.color  = '#22c55e';
-                setTimeout(function () {
-                    el.textContent = orig;
-                    el.style.color = '';
-                }, 1500);
-            });
-        });
-    });
-
-    // =========================================================
-    // Tooltip Bootstrap (jika ada elemen [data-bs-toggle="tooltip"])
-    // =========================================================
-    const tooltipEls = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipEls.forEach(function (el) {
-        new bootstrap.Tooltip(el);
-    });
-
 });

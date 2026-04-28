@@ -1,11 +1,11 @@
-        </main>
-        <!-- End Page Content -->
+    </main>
+    <!-- End Page Content -->
 
-        <footer class="app-footer">
-            <span>VoucherNet &copy; <?= date('Y') ?></span>
-            <span class="ms-3 text-muted">PHP <?= phpversion() ?></span>
-        </footer>
-    </div><!-- end #main-content -->
+    <footer class="app-footer">
+        <span>VoucherNet &copy; <?= date('Y') ?></span>
+        <span class="ms-3 text-muted">PHP <?= phpversion() ?></span>
+    </footer>
+</div><!-- end #main-content -->
 </div><!-- end .wrapper -->
 
 <!-- Bootstrap JS -->
