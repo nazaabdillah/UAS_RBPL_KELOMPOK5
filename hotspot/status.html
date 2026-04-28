@@ -10,36 +10,295 @@
   <meta http-equiv="expires" content="-1">
   <title>voucher.net — Status</title>
   <style>
-    *{margin:0;padding:0;border:0;box-sizing:border-box}
-    html,body{min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;background:#070b10;color:#eef2f7;overflow-x:hidden}
-    body{background-image:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(0,200,180,.14) 0%,transparent 65%),radial-gradient(ellipse 60% 45% at 95% 85%,rgba(100,80,220,.11) 0%,transparent 60%)}
-    table.center-wrap{width:100%;min-height:100vh;border-collapse:collapse}
-    table.center-wrap td{vertical-align:middle;padding:30px 16px}
-    .wrap{width:100%;max-width:400px;margin:0 auto}
-    .brand{text-align:center;margin-bottom:26px}
-    .brand-row{display:inline-block;vertical-align:middle;margin-bottom:8px}
-    .brand-icon{display:inline-block;vertical-align:middle;width:34px;height:34px;background:#0046d2;border-radius:9px;color:#060e14;font-size:17px;font-weight:800;line-height:34px;text-align:center;margin-right:9px}
-    .brand-name{display:inline-block;vertical-align:middle;font-size:24px;font-weight:800;color:#eef2f7;letter-spacing:-0.5px}
-    .brand-name span{color:#0043d2}
-    .brand-tag{display:block;font-size:11px;color:#556070;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
-    .card{background:#111827;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 30px;position:relative;-webkit-box-shadow:0 20px 60px rgba(0,0,0,.6);box-shadow:0 20px 60px rgba(0,0,0,.6)}
-    .card-top-line{height:1px;background:#0046d2;opacity:.4;margin:-34px -30px 26px;position:relative}
-    .badge{display:inline-block;background:rgba(0,210,190,.12);color:#0043d2;border-radius:100px;padding:4px 14px;font-size:12px;font-weight:600;margin-bottom:12px;letter-spacing:.3px}
-    .greeting{font-size:20px;font-weight:700;color:#eef2f7;margin-bottom:4px}
-    .greeting span{color:#004dd2}
-    .page-sub{font-size:13px;color:#6b7a96;margin-bottom:20px;line-height:1.5}
-    .stat-tbl{width:100%;border-collapse:collapse;margin-bottom:20px}
-    .stat-tbl tr{border-bottom:1px solid rgba(255,255,255,.07)}
-    .stat-tbl tr:last-child{border-bottom:none}
-    .stat-tbl td{padding:11px 0;font-size:13px;vertical-align:middle}
-    .stat-tbl td:first-child{color:#6b7a96;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;width:48%}
-    .stat-tbl td:last-child{color:#eef2f7;font-weight:500;text-align:right}
-    .stat-tbl a{color:#0043d2;text-decoration:none}
-    .btn-red{display:block;width:100%;height:48px;background:#e03050;color:#fff;font-family:inherit;font-size:15px;font-weight:700;border:none;border-radius:8px;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-transition:opacity .2s;transition:opacity .2s}
-    .btn-red:hover{opacity:.88}
-    .footer{text-align:center;margin-top:20px;font-size:11px;color:#3a4558}
-    .footer a{color:#556070;text-decoration:none}
-    @media(max-width:480px){.card{padding:26px 20px;border-radius:12px}}
+    /* ============================================
+       STYLE DIPERBAIKI - TIDAK MENGUBAH STRUKTUR HTML
+       ============================================ */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+    min-height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+    font-size: 15px;
+    background: linear-gradient(135deg, #1c1438 0%, #1b1043 100%);
+    color: #eef2f7;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #100331 0%, #1c1438 100%);
+}
+
+    table.center-wrap {
+        width: 100%;
+        min-height: 100vh;
+        border-collapse: collapse;
+    }
+
+    table.center-wrap td {
+        vertical-align: middle;
+        padding: 30px 20px;
+    }
+
+    .wrap {
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    /* ========== BRAND ========== */
+    .brand {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .brand-row {
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 8px;
+    }
+
+    .brand-icon {
+        display: inline-block;
+        vertical-align: middle;
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(145deg, #0a4ad2, #002a8c);
+        border-radius: 12px;
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 38px;
+        text-align: center;
+        margin-right: 10px;
+        box-shadow: 0 6px 12px rgba(0, 67, 210, 0.25);
+    }
+
+    .brand-name {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 25px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffffff, #b0c8ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        letter-spacing: -0.5px;
+    }
+
+    .brand-name span {
+        background: linear-gradient(135deg, #4a7eff, #0037b3);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .brand-tag {
+        display: block;
+        font-size: 10px;
+        color: #7c8aa8;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: 5px;
+    }
+
+    /* ========== CARD ========== */
+    .card {
+        background: rgba(17, 24, 45, 0.94);
+        backdrop-filter: blur(2px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 28px;
+        padding: 34px 30px;
+        position: relative;
+        box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-top-line {
+        height: 3px;
+        background: linear-gradient(90deg, #00c8b4, #2b5eff, #00c8b4);
+        border-radius: 28px 28px 0 0;
+        opacity: 0.6;
+        margin: -34px -30px 26px;
+        position: relative;
+    }
+
+    /* ========== BADGE ========== */
+    .badge {
+        display: inline-block;
+        background: rgba(0, 210, 190, 0.12);
+        color: #2dd4bf;
+        border-radius: 40px;
+        padding: 5px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        letter-spacing: 0.3px;
+        border: 1px solid rgba(0, 210, 190, 0.2);
+    }
+
+    /* ========== GREETING ========== */
+    .greeting {
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff, #c4d4ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        margin-bottom: 5px;
+    }
+
+    .greeting span {
+        background: linear-gradient(135deg, #4a7eff, #00c8b4);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .page-sub {
+        font-size: 13px;
+        color: #8e9ec2;
+        margin-bottom: 22px;
+        line-height: 1.45;
+    }
+
+    /* ========== STATISTIK TABLE ========== */
+    .stat-tbl {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 22px;
+    }
+
+    .stat-tbl tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-tbl tr:last-child {
+        border-bottom: none;
+    }
+
+    .stat-tbl td {
+        padding: 13px 0;
+        font-size: 13px;
+        vertical-align: middle;
+    }
+
+    .stat-tbl td:first-child {
+        color: #8e9ec2;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 600;
+        width: 48%;
+    }
+
+    .stat-tbl td:last-child {
+        color: #eef2f7;
+        font-weight: 600;
+        text-align: right;
+        font-family: 'SF Mono', 'JetBrains Mono', monospace;
+    }
+
+    .stat-tbl a {
+        color: #2b5eff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .stat-tbl a:hover {
+        text-decoration: underline;
+    }
+
+    /* ========== TOMBOL LOGOUT ========== */
+    .btn-red {
+        display: block;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(95deg, #e03050, #b01a3a);
+        color: #fff;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 14px rgba(224, 48, 80, 0.25);
+    }
+
+    .btn-red:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(224, 48, 80, 0.35);
+    }
+
+    .btn-red:active {
+        transform: translateY(1px);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+        text-align: center;
+        margin-top: 22px;
+        font-size: 10px;
+        color: #4a577a;
+    }
+
+    .footer a {
+        color: #6b7c9e;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .footer a:hover {
+        color: #2dd4bf;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 560px) {
+        table.center-wrap td {
+            padding: 20px 16px;
+        }
+        .card {
+            padding: 26px 22px;
+            border-radius: 24px;
+        }
+        .card-top-line {
+            margin: -26px -22px 22px;
+        }
+        .brand-name {
+            font-size: 22px;
+        }
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+            line-height: 34px;
+            font-size: 16px;
+        }
+        .greeting {
+            font-size: 19px;
+        }
+        .stat-tbl td {
+            padding: 10px 0;
+        }
+        .btn-red {
+            height: 46px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .card {
+            padding: 22px 18px;
+        }
+        .stat-tbl td:first-child {
+            font-size: 10px;
+        }
+        .stat-tbl td:last-child {
+            font-size: 11px;
+        }
+    }
   </style>
   <script>
     $(if advert-pending == 'yes')
@@ -85,14 +344,14 @@
           <tr><td>IP Address</td><td>$(ip)</td></tr>
           <tr><td>Upload / Download</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
           $(if session-time-left)
-          <tr><td>Terhubung / Sisa</td><td>$(uptime) / $(session-time-left)</td></tr>
+          <tr><td>Terhubung / Sisa</td><td>$(uptime) / $(session-time-left)</td>
           $(else)
-          <tr><td>Durasi Sesi</td><td>$(uptime)</td></tr>
+          <tr><td>Durasi Sesi</td><td>$(uptime)</td>
           $(endif)
           $(if blocked == 'yes')
-          <tr><td>Status</td><td><a href="$(link-advert)" target="hotspot_advert">Lihat Iklan</a></td></tr>
+          <tr><td>Status</td><td><a href="$(link-advert)" target="hotspot_advert">Lihat Iklan</a></td>
           $(elif refresh-timeout)
-          <tr><td>Refresh Otomatis</td><td>$(refresh-timeout)</td></tr>
+          <tr><td>Refresh Otomatis</td><td>$(refresh-timeout)</td>
           $(endif)
         </table>
 
@@ -105,7 +364,8 @@
     <p class="footer">Powered by <a href="#">MikroTik RouterOS</a> &nbsp;&middot;&nbsp; &copy; voucher.net</p>
 
   </div>
-  </td></tr></table>
+  </td></tr>
+</table>
 
 </body>
 </html>
